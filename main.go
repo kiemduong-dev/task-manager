@@ -23,7 +23,7 @@ func main() {
 	config.Connect(dsn)
 
 	// auto migrate
-	config.DB.AutoMigrate(&models.User{}, &models.Task{})
+	config.DB.AutoMigrate(&models.User{}, &models.Category{}, &models.Task{})
 
 	port := os.Getenv("PORT")
 	if port == "" {

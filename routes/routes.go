@@ -20,5 +20,14 @@ func SetupRouter() *gin.Engine {
 		auth.PUT("/tasks/:id", controllers.UpdateTask)
 		auth.DELETE("/tasks/:id", controllers.DeleteTask)
 	}
+
+	category := r.Group("/categories")
+	{
+		category.POST("/", controllers.CreateCategory)
+		category.GET("/", controllers.GetCategories)
+		category.GET("/:id", controllers.GetCategory)
+		category.PUT("/:id", controllers.UpdateCategory)
+		category.DELETE("/:id", controllers.DeleteCategory)
+	}
 	return r
 }
