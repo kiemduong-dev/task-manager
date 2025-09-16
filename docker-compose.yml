@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: task
+      POSTGRES_PASSWORD: task
+      POSTGRES_DB: taskdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgres://task:task@db:5432/taskdb?sslmode=disable
+      JWT_SECRET: devsecret
+    ports:
+      - "8080:8080"
+    command: ["/app/server"]
+volumes:
+  db_data:
+
+
+

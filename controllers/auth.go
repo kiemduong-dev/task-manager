@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -36,7 +37,11 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "email already in use"})
 		return
 	}
-	hashed, _ := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "password hash failed"})
+		return
+	}
 	u := models.User{
 		Name:     in.Name,
 		Email:    in.Email,
@@ -46,6 +51,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "create failed"})
 		return
 	}
+	log.Printf("action=register user_id=%d email=%s", u.ID, u.Email)
 	c.JSON(http.StatusCreated, gin.H{"id": u.ID, "email": u.Email})
 }
 
@@ -85,5 +91,6 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "token create failed"})
 		return
 	}
+	log.Printf("action=login user_id=%d email=%s", user.ID, user.Email)
 	c.JSON(http.StatusOK, gin.H{"token": signed})
 }

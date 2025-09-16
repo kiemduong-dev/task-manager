@@ -15,4 +15,5 @@ func Connect(dsn string) {
 		log.Fatalf("failed to connect db: %v", err)
 	}
 	DB = db
+	
 }
